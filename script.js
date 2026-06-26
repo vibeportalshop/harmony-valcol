@@ -74,129 +74,36 @@ function animateParticles() {
 animateParticles();
 
 // CART SYSTEM
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {document.addEventListener("click", e => {
+  if (!cartPanel.contains(e.target) &&
+      !e.target.closest(".cart-icon")) {
+    cartPanel.classList.remove("open");
+  }
+});
 
-    let cart = [];
+let cart = [];
 
-    const cards = document.querySelectorAll(".v-card");
-    const cartPanel = document.getElementById("cart-panel");
-    const cartItems = document.getElementById("cart-items");
-    const cartCount = document.getElementById("cart-count");
-    const backBtn = document.getElementById("cart-back");
+const cards = document.querySelectorAll(".v-card");
+const cartPanel = document.getElementById("cart-panel");
+const cartItems = document.getElementById("cart-items");
+const cartCount = document.getElementById("cart-count");
+const backBtn = document.getElementById("cart-back");
 
-    // Close cart when clicking outside
-    document.addEventListener("click", (e) => {
-        if (
-            cartPanel.classList.contains("open") &&
-            !cartPanel.contains(e.target) &&
-            !e.target.closest(".cart-icon")
-        ) {
-            cartPanel.classList.remove("open");
-        }
-    });
+// select perfumes
+cards.forEach(card => {
+    card.addEventListener("click", () => {
+        const name = card.dataset.name;
 
-    // Select fragrances
-    cards.forEach(card => {
-        card.addEventListener("click", () => {
+        if (cart.includes(name)) return;
 
-            const name = card.dataset.name;
-
-            if (cart.includes(name)) {
-                return;
-            }
-
-            if (cart.length >= 2) {
-                alert("Only 2 fragrances allowed 💝");
-                return;
-            }
-
-            cart.push(name);
-
-            card.classList.add("selected-perfume");
-
-            updateCart();
-        });
-    });
-
-    // Open cart
-    window.toggleCart = function () {
-        cartPanel.classList.add("open");
-    };
-
-    // Close cart
-    backBtn.addEventListener("click", () => {
-        cartPanel.classList.remove("open");
-    });
-
-    // Update cart UI
-    function updateCart() {
-
-        cartItems.innerHTML = "";
-
-        cart.forEach(item => {
-
-            const li = document.createElement("li");
-
-            li.innerHTML = `
-                ${item}
-                <span class="remove-btn" onclick="removeItem('${item}')">✕</span>
-            `;
-
-            cartItems.appendChild(li);
-        });
-
-        cartCount.textContent = cart.length;
-    }
-
-    // Remove item
-    window.removeItem = function(name) {
-
-        cart = cart.filter(item => item !== name);
-
-        document.querySelectorAll(".v-card").forEach(card => {
-            if (card.dataset.name === name) {
-                card.classList.remove("selected-perfume");
-            }
-        });
-
-        updateCart();
-    };
-
-    // Reset cart
-    window.resetCart = function() {
-
-        cart = [];
-
-        document.querySelectorAll(".v-card").forEach(card => {
-            card.classList.remove("selected-perfume");
-        });
-
-        updateCart();
-    };
-
-    // WhatsApp Checkout
-    window.checkout = function() {
-
-        if (cart.length !== 2) {
-            alert("Please select exactly 2 fragrances 💕");
+        if (cart.length >= 2) {
+            alert("Only 2 fragrances allowed 💝");
             return;
         }
 
-        const message =
-`Hello, I want to order the Valentine Couple Box:
-
-• ${cart[0]}
-• ${cart[1]}
-
-Price: ₹400`;
-
-        window.open(
-            "https://wa.me/919322723436?text=" +
-            encodeURIComponent(message),
-            "_blank"
-        );
-    };
-
+        cart.push(name);
+        updateCart();
+    });
 });
 
 // open cart
